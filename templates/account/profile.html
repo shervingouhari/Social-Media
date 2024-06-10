@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static %}
+{% load post_tags %}
+{% block title %} Profile {% endblock title %}
+{% block style %}<link rel="stylesheet" href="{% static 'css/profile.css' %}">{% endblock style %}
+
+{% block content %}
+<main>
+    <header>
+        <div class="header-wrap">
+            <div class="profile-pic">
+                <img src="{{user.avatar.url}}" alt="profile-logo" />
+            </div>
+            <div class="profile-info">
+                <div class="title row">
+                    <h2 style="font-weight: bold;">{{user}}</h2>
+                    {% if request.user == user %}
+                        <a href="{% url 'edit_profile' request.user %}" class="btn btn-dark">Edit Profile</a>
+                        <button id="post-pop-up-button1" class="btn profile-settings-btn"><i style="color: dodgerblue; font-size: 30px;" class="far fa-plus-square"></i></button>
+                    {% else %}
+                        <button class="btn btn-outline-primary" id="follow-btn" data-userId="{{user.id}}" data-userAction="{% if request.user in user.followers.all %}unfollow{% else %}follow{% endif %}">
+                            {% if request.user in user.followers.all %}Unfollow{% else %}Follow{% endif %}  
+                        </button>
+                    {% endif %}
+                    <button class="btn profile-settings-btn"><i style="font-size: 30px;" class="fas fa-cog"></i></button> 
+                </div>
+                <div class="desktop-only">
+                    <div class="details row">
+                        <ul>
+                            <li><span>{{user.posts.all|length}}</span> posts</li>
+                            <li style="cursor: pointer;"><span id="followers-counter">{{user.followers.all|length}}</span><span id="followers-button"> followers</span></li>
+                            <li style="cursor: pointer;"><span>{{user.following.all|length}}</span><span id="following-button"> following</span></li>
+                        </ul>
+                    </div>
+                    <div class="descriptions row last" style="display: block;">
+                        <span>{% if user.first_name %} {{user.first_name}} {% endif %}</span>
+                        <span>{% if user.last_name %} {{user.last_name}} {% endif %}</span>
+                        <div>{% if user.biography %} {{user.biography}} {% endif %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <ul class="stories">
+        <li class="story-item">
+            <div class="image">
+                <img src="{% static 'image/no_user_avatar.png' %}" />
+            </div>
+            <div class="title">TESTING</div>
+        </li>
+    </ul>
+    <div class="desktop-only">
+        <div class="tabs">
+            <div id="POSTS-button" request-user="{{request.user}}" class="tab-item active" style="margin-right: 60px">
+                <svg
+                    aria-label="Posts"
+                    class="_8-yf5"
+                    fill="#262626"
+                    height="12"
+                    viewBox="0 0 48 48"
+                    width="12"
+                >
+                    <path
+                        clip-rule="evenodd"
+                        d="M45 1.5H3c-.8 0-1.5.7-1.5 1.5v42c0 .8.7 1.5 1.5 1.5h42c.8 0 1.5-.7 1.5-1.5V3c0-.8-.7-1.5-1.5-1.5zm-40.5 3h11v11h-11v-11zm0 14h11v11h-11v-11zm11 25h-11v-11h11v11zm14 0h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11zm14 28h-11v-11h11v11zm0-14h-11v-11h11v11zm0-14h-11v-11h11v11z"
+                        fill-rule="evenodd"
+                    ></path>
+                </svg>
+                <span>POSTS</span>
+            </div>
+            {% if user == request.user %}
+                <div id="SAVED-button" request-user="{{request.user}}" class="tab-item" style="margin-right: 60px">
+                    <svg
+                        aria-label="Posts"
+                        class="_8-yf5"
+                        fill="#8e8e8e"
+                        height="12"
+                        viewBox="0 0 48 48"
+                        width="12"
+                    >
+                        <path
+                            d="M41 10c-2.2-2.1-4.8-3.5-10.4-3.5h-3.3L30.5 3c.6-.6.5-1.6-.1-2.1-.6-.6-1.6-.5-2.1.1L24 5.6 19.7 1c-.6-.6-1.5-.6-2.1-.1-.6.6-.7 1.5-.1 2.1l3.2 3.5h-3.3C11.8 6.5 9.2 7.9 7 10c-2.1 2.2-3.5 4.8-3.5 10.4v13.1c0 5.7 1.4 8.3 3.5 10.5 2.2 2.1 4.8 3.5 10.4 3.5h13.1c5.7 0 8.3-1.4 10.5-3.5 2.1-2.2 3.5-4.8 3.5-10.4V20.5c0-5.7-1.4-8.3-3.5-10.5zm.5 23.6c0 5.2-1.3 7-2.6 8.3-1.4 1.3-3.2 2.6-8.4 2.6H17.4c-5.2 0-7-1.3-8.3-2.6-1.3-1.4-2.6-3.2-2.6-8.4v-13c0-5.2 1.3-7 2.6-8.3 1.4-1.3 3.2-2.6 8.4-2.6h13.1c5.2 0 7 1.3 8.3 2.6 1.3 1.4 2.6 3.2 2.6 8.4v13zM34.6 25l-9.1 2.8v-3.7c0-.5-.2-.9-.6-1.2-.4-.3-.9-.4-1.3-.2l-11.1 3.4c-.8.2-1.2 1.1-1 1.9.2.8 1.1 1.2 1.9 1l9.1-2.8v3.7c0 .5.2.9.6 1.2.3.2.6.3.9.3.1 0 .3 0 .4-.1l11.1-3.4c.8-.2 1.2-1.1 1-1.9s-1.1-1.2-1.9-1z"
+                        ></path>
+                    </svg>
+                    <span>SAVED</span>
+                </div>
+            {% endif %}
+            <div id="TAGGED-button" request-user="{{request.user}}" class="tab-item">
+                <svg
+                    aria-label="Tagged"
+                    class="_8-yf5"
+                    fill="#8e8e8e"
+                    height="12"
+                    viewBox="0 0 48 48"
+                    width="12"
+                >
+                    <path
+                        d="M41.5 5.5H30.4c-.5 0-1-.2-1.4-.6l-4-4c-.6-.6-1.5-.6-2.1 0l-4 4c-.4.4-.9.6-1.4.6h-11c-3.3 0-6 2.7-6 6v30c0 3.3 2.7 6 6 6h35c3.3 0 6-2.7 6-6v-30c0-3.3-2.7-6-6-6zm-29.4 39c-.6 0-1.1-.6-1-1.2.7-3.2 3.5-5.6 6.8-5.6h12c3.4 0 6.2 2.4 6.8 5.6.1.6-.4 1.2-1 1.2H12.1zm32.4-3c0 1.7-1.3 3-3 3h-.6c-.5 0-.9-.4-1-.9-.6-5-4.8-8.9-9.9-8.9H18c-5.1 0-9.4 3.9-9.9 8.9-.1.5-.5.9-1 .9h-.6c-1.7 0-3-1.3-3-3v-30c0-1.7 1.3-3 3-3h11.1c1.3 0 2.6-.5 3.5-1.5L24 4.1 26.9 7c.9.9 2.2 1.5 3.5 1.5h11.1c1.7 0 3 1.3 3 3v30zM24 12.5c-5.3 0-9.6 4.3-9.6 9.6s4.3 9.6 9.6 9.6 9.6-4.3 9.6-9.6-4.3-9.6-9.6-9.6zm0 16.1c-3.6 0-6.6-2.9-6.6-6.6 0-3.6 2.9-6.6 6.6-6.6s6.6 2.9 6.6 6.6c0 3.6-3 6.6-6.6 6.6z"
+                    ></path>
+                </svg>
+                <span>TAGGED</span>
+            </div>
+        </div>
+    </div>
+    {% if not posts and user == request.user %}
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+            <?xml version="1.0" encoding="utf-8"?>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="100" height="100">
+                <path d="M19.09375 5C18.011719 5 17.105469 5.625 16.5625 6.4375C16.5625 6.449219 16.5625 6.457031 16.5625 6.46875L14.96875 9L6 9C3.253906 9 1 11.253906 1 14L1 38C1 40.746094 3.253906 43 6 43L44 43C46.746094 43 49 40.746094 49 38L49 14C49 11.253906 46.746094 9 44 9L34.9375 9L33.34375 6.46875C33.34375 6.457031 33.34375 6.449219 33.34375 6.4375C32.800781 5.625 31.894531 5 30.8125 5 Z M 19.09375 7L30.8125 7C31.132813 7 31.398438 7.175781 31.65625 7.5625L33.5625 10.53125C33.746094 10.820313 34.0625 11 34.40625 11L44 11C45.65625 11 47 12.34375 47 14L47 38C47 39.65625 45.65625 41 44 41L6 41C4.34375 41 3 39.65625 3 38L3 14C3 12.34375 4.34375 11 6 11L15.5 11C15.84375 11 16.160156 10.820313 16.34375 10.53125L18.21875 7.5625L18.25 7.53125C18.5 7.179688 18.789063 7 19.09375 7 Z M 10 13C8.355469 13 7 14.355469 7 16C7 17.644531 8.355469 19 10 19C11.644531 19 13 17.644531 13 16C13 14.355469 11.644531 13 10 13 Z M 10 15C10.554688 15 11 15.445313 11 16C11 16.554688 10.554688 17 10 17C9.445313 17 9 16.554688 9 16C9 15.445313 9.445313 15 10 15 Z M 25 15C18.9375 15 14 19.9375 14 26C14 32.0625 18.9375 37 25 37C31.0625 37 36 32.0625 36 26C36 19.9375 31.0625 15 25 15 Z M 25 17C29.980469 17 34 21.019531 34 26C34 30.980469 29.980469 35 25 35C20.019531 35 16 30.980469 16 26C16 21.019531 20.019531 17 25 17Z" fill="#323232" />
+            </svg>
+        </div>
+        <div style="margin-top: 20px; text-align: center;">
+            <h1 style="color: white; font-weight: bold; font-size: 30px; padding-bottom: 25px;">Share photos</h1>
+            <p style="color: white; padding-bottom: 20px;">When you share photos, they will appear on your profile.</p>
+            <a href="" id="post-pop-up-button2" style="font-weight: bold;">Share your first photo</a>
+        </div>
+    {% endif %}
+    <div class="gallery" id="gallery">
+        {% for post in posts %}
+            <a class="gallery-item" tabindex="0" href="{{ post.get_absolute_url }}">
+                {% if post.media.first|extension == 'image' %}
+                    <img src="{{post.media.first.media.url}}" alt="gallery-post">
+                    {% if post.media.count > 1 %}
+                        <span class="eapps-instagram-feed-posts-item-image-icon-carousel eapps-instagram-feed-posts-item-image-icon es-post-type">
+                            <svg viewBox="0 0 45.964 45.964">
+                                <path
+                                    d="M32.399,40.565H11.113v1.297c0,2.24,1.838,4.051,4.076,4.051h26.733c2.239,0,4.042-1.811,4.042-4.051V15.13c0-2.237-1.803-4.068-4.042-4.068h-1.415v21.395C40.507,36.904,36.845,40.566,32.399,40.565z"
+                                ></path>
+                                <path
+                                    d="M0,4.102l0,28.355c0,2.241,1.814,4.067,4.051,4.067h28.365c2.237,0,4.066-1.826,4.066-4.067l0-28.356c0-2.238-1.828-4.051-4.066-4.051H4.051C1.814,0.05,0,1.862,0,4.102z"
+                                ></path>
+                            </svg>
+                        </span>
+                    {% endif %}  
+                {% else %}
+                    <video src="{{post.media.first.media.url}}#t=1" alt="gallery-post" preload="auto"></video>
+                    {% if post.media.count == 1 %}
+                        <span class="eapps-instagram-feed-posts-item-image-icon-video eapps-instagram-feed-posts-item-image-icon es-post-type">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M23.467,5.762c-0.118-0.045-0.232-0.068-0.342-0.068c-0.246,0-0.451,0.087-0.615,0.26l-3.76,3.217v5.766l3.76,3.578c0.164,0.173,0.369,0.26,0.615,0.26c0.109,0,0.223-0.023,0.342-0.068C23.822,18.552,24,18.284,24,17.901V6.57C24,6.186,23.822,5.917,23.467,5.762z"
+                                ></path>
+                                <path
+                                    d="M16.33,4.412c-0.77-0.769-1.696-1.154-2.78-1.154H3.934c-1.084,0-2.01,0.385-2.78,1.154C0.385,5.182,0,6.108,0,7.192v9.616c0,1.084,0.385,2.01,1.154,2.78c0.77,0.77,1.696,1.154,2.78,1.154h9.616c1.084,0,2.01-0.385,2.78-1.154c0.77-0.77,1.154-1.696,1.154-2.78v-3.076v-3.478V7.192C17.484,6.108,17.099,5.182,16.33,4.412z M8.742,17.229c-2.888,0-5.229-2.341-5.229-5.229c0-2.888,2.341-5.229,5.229-5.229S13.971,9.112,13.971,12C13.971,14.888,11.63,17.229,8.742,17.229z"
+                                ></path>
+                                <circle cx="8.742" cy="12" r="3.5"></circle>
+                            </svg>
+                        </span>
+                    {% else %}
+                        <span class="eapps-instagram-feed-posts-item-image-icon-carousel eapps-instagram-feed-posts-item-image-icon es-post-type">
+                            <svg viewBox="0 0 45.964 45.964">
+                                <path
+                                    d="M32.399,40.565H11.113v1.297c0,2.24,1.838,4.051,4.076,4.051h26.733c2.239,0,4.042-1.811,4.042-4.051V15.13c0-2.237-1.803-4.068-4.042-4.068h-1.415v21.395C40.507,36.904,36.845,40.566,32.399,40.565z"
+                                ></path>
+                                <path
+                                    d="M0,4.102l0,28.355c0,2.241,1.814,4.067,4.051,4.067h28.365c2.237,0,4.066-1.826,4.066-4.067l0-28.356c0-2.238-1.828-4.051-4.066-4.051H4.051C1.814,0.05,0,1.862,0,4.102z"
+                                ></path>
+                            </svg>
+                        </span>
+                    {% endif %}
+                {% endif %}
+                <div class="gallery-item-info">
+                    <ul style="margin-bottom: 10px;">
+                        <li style="color: white; font-size: 20px; padding-right: 10px;"><i class="fas fa-heart" aria-hidden="true"></i> {{post.total_likes|human_format:"symbolic"}}</li>
+                        <li style="color: white; font-size: 20px;"><i class="fas fa-comment" aria-hidden="true"></i> {{post.comments.all|length|human_format:"symbolic"}}</li>
+                    </ul>
+                    {% if post.caption %}
+                        <ul style="margin-bottom: 0;">
+                            <li style="color: white; font-size: 20px; text-align: center;"><i aria-hidden="true">{{post.caption|truncatechars:100}}</i></li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+    {% if posts.has_next %}
+        <div style="display: flex; justify-content: center; margin: 20px;"><button id="load-more-button" class="btn btn-dark">load more</button></div>
+    {% endif %}
+</main>
+
+<script src="{% static 'js/profile/create_post.js' %}"></script>
+<script src="{% static 'js/profile/post_loader.js' %}"></script>
+<script src="{% static 'js/profile/follow_unfollow.js' %}"></script>
+<script src="{% static 'js/profile/followers_following.js' %}"></script>
+<script src="{% static 'js/profile/SAVED.js' %}"></script>
+<script src="{% static 'js/profile/POSTS.js' %}"></script>
+{% endblock content %}
+

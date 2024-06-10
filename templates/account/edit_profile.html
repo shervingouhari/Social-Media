@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %} Edit Profile {% endblock title %}
+{% block style %}<link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">{% endblock style %}
+
+{% block content %}
+<section id="uniqueee">
+    <h1 class="text-dark">Edit Profile {{user}}</h1><br />
+    {% crispy form %}
+</section>
+{% endblock content %}

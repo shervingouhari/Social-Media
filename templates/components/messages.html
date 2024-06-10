@@ -1,0 +1,36 @@
+
+<script>
+    const swalMessage = function (message, timer=2500) {
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: message,
+            showConfirmButton: false,
+            timer: timer,
+            background: "black"
+        });
+    };
+</script>
+
+{% if messages %}
+        {% for message in messages %} 
+        
+            {% if message.tags == "error" %}
+                <div class="alert alert-danger messages" role="alert">{{message}}</div>
+            {% elif message.tags == "warning" %}
+                <div class="alert alert-warning messages" role="alert">{{message}}</div>
+            {% elif message.tags == "info" %}
+                <div class="alert alert-info messages" role="alert">{{message}}</div>
+
+            {% elif message.tags == "success" %}
+                {% if message.message == "You are logged in successfully." or message.message == "You are logged out successfully." or message.message == "Password reset successfully." %}
+                    <script>swalMessage("{{message}}");</script>
+                {% elif message.message == "Email sent successfully." %}
+                    <script>swalMessage("{{message}}", 15000);</script>
+                {% else %}
+                    <div class="alert alert-success messages" role="alert">{{message}}</div>
+                {% endif %}
+            {% endif %}
+            
+        {% endfor %}
+{% endif %}

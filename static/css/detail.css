@@ -1,0 +1,364 @@
+@import url("https://fonts.googleapis.com/css2?family=Cabin&display=swap");
+* {
+    box-sizing: border-box;
+}
+a {
+    cursor: pointer;
+}
+body #detail-first-div {
+    background: black;
+    margin: 50px auto;
+    padding: 0;
+    border: 0;
+    width: 800px;
+    max-width: 95%;
+    font-family: "Cabin", sans-serif;
+}
+body section {
+    background: black;
+    position: relative;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 0;
+    border: 1px solid #dbdbdb;
+}
+body section .header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0px;
+}
+body section .header .user {
+    margin: 5px;
+    padding: 7px;
+    border: 0;
+}
+body section .header .param {
+    cursor: pointer;
+    margin: 6px;
+    padding: 6px;
+    border: 0;
+    border-radius: 4px;
+}
+body section .header .param:hover {
+    background: #000;
+}
+body section .img-container img {
+    width: 100%;
+}
+body section .like-checkbox {
+    display: none;
+}
+body section .toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+body section .toolbar .like,
+body section .toolbar .comment,
+body section .toolbar .transfer,
+body section .toolbar .signet {
+    margin: 8px;
+    padding: 0;
+    border: 0;
+    font-size: 24px;
+    cursor: pointer;
+}
+body section .toolbar .signet {
+    position: absolute;
+    right: 0;
+}
+body section .description {
+    margin: 6px;
+    padding: 6px;
+    border: 0;
+    font-size: 16px;
+    word-wrap: break-word;
+    color: gray;
+}
+body section .description strong a {
+    font-weight: 900;
+    font-size: 15px;
+    color: gray;
+}
+.description > span {
+    font-size: small;
+    font-weight: 500;
+    color: #7c818e;
+}
+.check-like {
+    animation-duration: 0.2s;
+    animation-name: like;
+    fill: #1f81ba;
+}
+.check-path {
+    fill: #1f81ba;
+    background: #1f81ba;
+}
+@keyframes like {
+    from {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.4);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+a {
+    text-decoration: none;
+    color: #050505;
+    font-weight: 100;
+}
+
+.comment-textarea {
+    width: 100%;
+    height: 10em;
+    border-color: #ccc;
+    resize: none;
+    border-radius: 4px;
+}
+.comment-submit {
+    width: 6em;
+    height: 3em;
+    background-color: royalblue;
+    color: seashell;
+    border: none;
+    border-radius: 3px;
+    font-size: 1em;
+    font-weight: bold;
+}
+.comments {
+    display: grid;
+    grid-template-columns: 10% 70% 10%;
+    gap: 2%;
+    align-items: center;
+    margin-bottom: 3em;
+}
+.comment-profile > a > img {
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+}
+.comment-main {
+    display: grid;
+    height: 50px;
+    row-gap: 10px;
+    grid-template-rows: auto auto;
+}
+
+.comment-info {
+    display: grid;
+    grid-template-columns: 20% 20% 15%;
+    font-size: small;
+    font-weight: 500;
+    color: #7c818e;
+}
+
+.comment-form {
+    margin: 2em 0;
+}
+
+.user {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+}
+.user:hover {
+    color: gray;
+}
+.user > a > img {
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    border: 2px solid rgb(218, 8, 183);
+    margin-right: 5px;
+}
+.user > a {
+    text-decoration: none;
+    color: gray;
+    padding-left: 5px;
+}
+
+.comment-like > svg {
+    cursor: pointer;
+}
+
+.comment-text > a > strong {
+    font-weight: 900;
+    font-size: 15px;
+    color: gray;
+}
+
+.comment-text > div {
+    width: 520px;
+    word-wrap: break-word;
+    margin-top: 10px;
+    color: gray;
+}
+
+#numberOfComments {
+    font-size: small;
+    font-weight: 500;
+    color: #7c818e;
+}
+
+.fa-solid {
+    color: red;
+}
+.fa-solid:hover {
+    color: #343a40;
+}
+.fa-regular {
+    color: #343a40;
+}
+.fa-regular:hover {
+    color: red;
+}
+
+body {
+    background-color: black;
+}
+
+.hide {
+    display: none;
+}
+
+.post__left-button,
+.post__right-button {
+    width: 33px;
+    height: 33px;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.5));
+    position: absolute;
+    top: 382.5px;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+.post__left-button {
+    left: 16px;
+    opacity: 0.7;
+}
+.post__right-button {
+    right: 16px;
+    opacity: 0.7;
+}
+
+.post__indicators {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: absolute;
+    top: 695px;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+.post__indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: hsl(0, 0%, 60%);
+}
+.post__indicator--active {
+    background-color: hsl(204, 100%, 48%);
+}
+
+.post__content {
+    display: flex;
+    position: relative;
+}
+.post__medias {
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: auto;
+
+    width: 100%;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+.post__medias::-webkit-scrollbar {
+    display: none;
+}
+.post__media {
+    width: 100%;
+    flex: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+::-webkit-scrollbar {
+    width: 1em;
+    background-color: #343a40;
+}
+::-webkit-scrollbar-thumb {
+    background-color: black;
+    border: 1px solid #343a40;
+}
+
+.form-control {
+    background-color: black;
+}
+.form-control:focus {
+    background-color: black;
+    border-color: gray !important;
+    box-shadow: none;
+}
+hr {
+    color: #333;
+    background-color: #333;
+    background: #333;
+}
+.param-container {
+    height: 200px;
+    width: 200px;
+    background-color: black;
+    border: 1px solid gray;
+    position: absolute;
+    top: 4.5em;
+    right: -34px;
+    filter: drop-shadow(0px 2px 2px rgb(101, 101, 101));
+    display: grid;
+    align-items: center;
+    border-radius: 5px;
+    z-index: 10000;
+}
+.param-container::before {
+    border: 1px solid gray;
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    position: absolute;
+    right: 4em;
+    top: -10px;
+    transform: rotate(45deg);
+    position: fixed;
+}
+
+.param-item {
+    display: grid;
+    grid-template-columns: 15% auto;
+    padding-left: 1em;
+    height: 100%;
+    width: calc(100%-1em);
+    align-items: center;
+    z-index: 3200;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.param-item:hover {
+    background-color: rgb(242, 251, 255);
+    cursor: pointer;
+    color: inherit;
+}
+
+#param-container > span {
+    font-weight: bold;
+}

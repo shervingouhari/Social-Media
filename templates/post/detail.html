@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load post_tags %}
+{% load crispy_forms_tags %}
+{% block title %} Post Detail {% endblock title %}
+{% block style %}<link rel="stylesheet" href="{% static 'css/detail.css' %}">{% endblock style %}
+
+{% block content %}
+<div id="detail-first-div">
+  <section>
+    <div id="request-user-id" hidden>{{request.user.id}}</div>
+    <div class="header">
+      <div class="user">
+        <a href="{% url 'profile' post.user %}"><img src="{{post.user.avatar.url}}" alt=""></a>
+        <a href="{% url 'profile' post.user %}">
+          <strong>{{post.user}}</strong>
+        </a>
+      </div>
+      <div class="param">
+        <button id="param-button" style="background-color: inherit; border: 0; position: absolute; top: 10px; left: 740px;" class="btn">
+          <?xml version="1.0" encoding="utf-8"?>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="25" height="25">
+            <path d="M39 30c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6S42.309 30 39 30zM9 30c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6S12.309 30 9 30zM24 30c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6S27.309 30 24 30z" fill="#323232" />
+          </svg>
+        </button>
+      </div>
+
+      {% if request.user.is_authenticated %}
+        <div id="param-container" class="param-container profile-box display-none">
+          {% if post.user == request.user %}
+            <a href="{% url 'post:edit' post.slug %}" id="post-edit-button" class="param-item">
+              <i class="fas fa-edit" style="color: #333;"></i>
+              <span style="font-weight: bold;">Edit</span>
+            </a>
+            <a href="{% url 'post:delete' post.slug %}" id="post-delete-button" class="param-item">
+              <i class="fa-solid fa-trash" style="color: red;"></i>
+              <span style="color: red; font-weight: bold;">Delete</span>
+            </a>
+          {% else %}
+            <a href="{% url 'profile' request.user %}" class="param-item">
+              <i class="fa-solid fa-save" style="color: #333;"></i>
+              <span style="font-weight: bold;">Save</span>
+            </a>
+          {% endif %}
+        </div><hr>
+      {% endif %}
+
+    </div>
+    <div class="img-container">
+      <div class="post__content">
+        <div class="post__medias">
+          {% for file in post.media.all %}
+            {% if file|extension == 'image' %}
+              <img height="600px" width="fit-content" class="post__media" src="{{file.media.url}}" />
+            {% else %}
+              <video height="600px" width="fit-content" class="post__media" src="{{file.media.url}}" controls autoplay></video>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% if post.media.count > 1 %}
+        <button id="previous-slider" class="post__left-button hide">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path fill="#fff" d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"></path>
+          </svg>
+        </button>
+        <button id="next-slider" class="post__right-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path fill="#fff" d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm113.9 231L234.4 103.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L285.1 256 183.5 357.6c-9.4 9.4-9.4 24.6 0 33.9l17 17c9.4 9.4 24.6 9.4 33.9 0L369.9 273c9.4-9.4 9.4-24.6 0-34z"></path>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+    <div class="toolbar">
+      <a class="like" data-postId="{{post.id}}">
+        {% if request.user in post.likes.all %}
+          <i class="fa-solid fa-heart"></i>
+        {% else %}
+          <i class="fa-regular fa-heart"></i>
+        {% endif %}
+      </a>
+      <a class="transfer">
+        <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24">
+          <path
+            d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.7l23.2-39c.4-.4.4-1 .1-1.5zM5.2 6.1h35.5L18 18.7 5.2 6.1zm18.7 33.6l-4.4-18.4L42.4 8.6 23.9 39.7z">
+          </path>
+        </svg>
+      </a>
+      <a class="signet" data-postId="{{post.id}}">
+        {% if request.user in post.saves.all %}
+          <i class="fa-solid fa-bookmark" style="color: #262626; fill: #262626;"></i>
+        {% else %}
+          <i class="fa-regular fa-bookmark" style="color: #262626; fill: #262626;"></i>
+        {% endif %}
+      </a>
+      <div class="post__indicators">
+        {% if post.media.count > 1 %}
+          {% for file in post.media.all %} 
+            <div class="post__indicator {% if forloop.counter0 == 0 %} post__indicator--active {% endif %}"></div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    <div id="like-container">
+      <div class="description" id="like-body">
+        <span id="like-number">{{post.likes.all|length}}</span>
+        <span id="like-or-likes">
+          {% if post.likes.all|length > 1 %}
+            Likes
+          {% else %}
+            Like
+          {% endif %}
+        </span>
+      </div>
+    </div>
+    <div class="description">
+      <strong><a href="{% url 'profile' post.user %}">{{post.user}}&nbsp;&nbsp;</a></strong>{{post.caption}}<br><br>
+      <span>{{post.created|customtimesince}} ago</span>
+    </div>
+  </section>
+  <div class="comment-form">
+    <form action="" method="POST">
+        {% csrf_token %} {{form|crispy}}
+        <button class="btn btn-dark" id="comment-post-button" type="submit">Comment</button>
+    </form>
+  </div>
+  {% if comments_orderByLikesAscending|length > 1 %}
+    <div class="d-flex mb-3">
+      <div id="numberOfComments" class="mr-auto">Number of comments: <div class="d-inline-block">{{post.comments.all|length}}</div></div>
+      <div id="topComments" post-slug="{{post.slug}}" class="btn btn-dark rounded mr-1">Top</div>
+      <div id="newestComments" post-slug="{{post.slug}}" class="btn btn-dark rounded">Newest</div>
+    </div>
+  {% endif %}
+  <div id="comment-container">
+    {% for cm in comments_orderByLikesAscending %}
+      <div class="comments">
+        <div class="comment-profile">
+            <a href="{% url 'profile' cm.user %}"><img src="{{cm.user.avatar.url}}" alt=""></a>
+        </div>
+        <div class="comment-main">
+            <div class="comment-text">
+                <a class="user" href="{% url 'profile' cm.user %}"><strong>{{cm.user}}</strong></a>
+                <div>{{cm.text}}</div>
+            </div>
+            <div class="comment-info">
+                <div class="comment-date">{{cm.created|customtimesince}}</div>
+                <div class="comment-likes">
+                  {% if cm.likes.all|length > 1 %}
+                    <span class="like-counts">{{cm.likes.all|length}}</span> <span class="like-word">Likes</span>
+                  {% else %}
+                    <span class="like-counts">{{cm.likes.all|length}}</span> <span class="like-word">Like</span>
+                  {% endif %}
+                </div>
+                <div class="comment-reply">Reply</div>
+            </div>
+        </div>
+        <div class="comment-like" data-commentId="{{cm.id}}" data-commentAction="{% if request.user in cm.likes.all %}dis{% endif %}like">
+          {% if request.user in cm.likes.all %}
+            <i style="font-size: 20px;" class="fas fa-heart heart-active"></i>
+          {% else %}
+            <i style="font-size: 20px;" class="far fa-heart"></i>
+          {% endif %}
+        </div>
+      </div><hr>
+    {% endfor %}
+  </div>
+</div>
+
+<script src="{% static 'js/detail/slider.js' %}"></script>
+<script src="{% static 'js/detail/post_like.js' %}"></script>
+<script src="{% static 'js/detail/comment_post.js' %}"></script>
+<script src="{% static 'js/detail/comment_like.js' %}"></script>
+<script src="{% static 'js/detail/comment_order.js' %}"></script>
+<script src="{% static 'js/detail/param_button.js' %}"></script>
+<script src="{% static 'js/detail/post_save.js' %}"></script>
+<script src="{% static 'js/detail/post_delete.js' %}"></script>
+<script src="{% static 'js/detail/post_edit.js' %}"></script>
+{% endblock content %}
